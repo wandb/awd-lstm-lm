@@ -7,6 +7,8 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 
+import wandb
+
 import data
 import model
 
@@ -63,6 +65,9 @@ parser.add_argument('--beta', type=float, default=1,
 parser.add_argument('--wdecay', type=float, default=1.2e-6,
                     help='weight decay applied to all weights')
 args = parser.parse_args()
+
+run = wandb.init()
+run.config.update(args)
 
 # Set the random seed manually for reproducibility.
 torch.manual_seed(args.seed)
@@ -196,6 +201,8 @@ try:
                 prm.data = optimizer.state[prm]['ax'].clone()
 
             val_loss2 = evaluate(val_data)
+            run.history.add({'Validation Loss': val_loss2})
+            run.summary["Validation Loss"] = val_loss2
             print('-' * 89)
             print('| end of epoch {:3d} | time: {:5.2f}s | valid loss {:5.2f} | '
                     'valid ppl {:8.2f}'.format(epoch, (time.time() - epoch_start_time),
@@ -229,6 +236,8 @@ with open(args.save, 'rb') as f:
     
 # Run on test data.
 test_loss = evaluate(test_data, test_batch_size)
+run.history.add({'Test Loss': test_loss})
+run.summary["Test Loss"] = test_loss
 print('=' * 89)
 print('| End of training | test loss {:5.2f} | test ppl {:8.2f}'.format(
     test_loss, math.exp(test_loss)))

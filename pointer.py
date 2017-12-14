@@ -6,6 +6,8 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 
+import wandb
+
 import data
 import model
 
@@ -29,6 +31,9 @@ parser.add_argument('--theta', type=float, default=0.6625523432485668,
 parser.add_argument('--lambdasm', type=float, default=0.12785920428335693,
                     help='linear mix between only pointer (1) and only vocab (0) distribution')
 args = parser.parse_args()
+
+run = wandb.init()
+run.config.update(args)
 
 ###############################################################################
 # Load data
