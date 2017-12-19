@@ -1,0 +1,47 @@
+program: main.py
+description: Hyperparameter sweep for main model
+method: random
+metric:
+  name: Validation Loss
+  goal: minimize
+parameters:
+  data:
+    value: data/penn
+  model:
+    values: [LSTM, QRNN, GRU, QRNN, QRNN]
+  emsize:
+    values: [300, 400, 500]
+  nhid:
+    min: 800
+    max: 2000
+  nlayers:
+    min: 2
+    max: 5
+  lr:
+    min: 20
+    max: 40
+  clip:
+    min: 0.15
+    max: 0.3
+  epochs:
+    min: 400
+    max: 600
+  batch_size:
+    values: [8, 16, 20, 32]
+  bptt:
+    min: 50
+    max: 200
+  dropouti:
+    min: 0.3
+    max: 0.5
+  dropouth:
+    min: 0.15
+    max: 0.35
+  wdrop:
+    min: 0.0
+    max: 0.2
+  seed:
+    min: 0
+    max: 1023
+  save:
+    value: wandb/PTB.pt
